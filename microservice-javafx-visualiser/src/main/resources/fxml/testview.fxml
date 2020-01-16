@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gusev.visual.TestViewController">
+   <center>
+      <Pane fx:id="map" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #AAAAAA; -fx-border-color: #000000; -fx-border-width: 5;" BorderPane.alignment="CENTER">
+         <children>
+            <Pane fx:id="tile" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #ff0000;" />
+         </children></Pane>
+   </center>
+</BorderPane>
