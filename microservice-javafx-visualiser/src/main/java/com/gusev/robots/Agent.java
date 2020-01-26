@@ -8,13 +8,13 @@ package com.gusev.robots;
 import com.gusev.utilities.MovableObject;
 import com.gusev.utilities.Point;
 import com.gusev.utilities.PointsScanner;
-import com.gusev.utilities.StepWorkingInteractive;
 import com.gusev.utilities.TransferableUnit;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.gusev.world.WorldMap;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
 /**
  * @author gusev_a
  */
-public class Agent extends Pane implements StepWorkingInteractive, PointsScanner,
+public class Agent extends Pane implements PointsScanner,
         MovableObject, TransferableUnit {
     public static final int READY = 0;
     public static final int MOVING = 1;
@@ -81,8 +81,14 @@ public class Agent extends Pane implements StepWorkingInteractive, PointsScanner
         setStatus(READY);
         setPrefWidth(15);
         setPrefHeight(15);
-        setLayoutX(20 * point.x + 2);
-        setLayoutY(20 * point.y + 2);
+        setLayout();
+    }
+
+    private void setLayout() {
+        Platform.runLater(()->{
+            setLayoutX(20 * point.x + 2);
+            setLayoutY(20 * point.y + 2);
+        });
     }
 
     @Override
@@ -127,6 +133,7 @@ public class Agent extends Pane implements StepWorkingInteractive, PointsScanner
         setStatus(BROKEN);
     }
 
+    @Override
     public boolean isPoint(int x, int y){
         return (x == point.x) && (y == point.y);
     }
@@ -144,30 +151,39 @@ public class Agent extends Pane implements StepWorkingInteractive, PointsScanner
 //        enviroment.setTile(X.get(), Y.get(), WorldMap.ROBOT_ON_TILE);
 ////        model.setLayoutX(WorldMap.TILE_SIZE * X.get());
 ////        model.setLayoutY(WorldMap.TILE_SIZE * Y.get());
+        setLayout();
     }
 
     @Override
     public void moveUp() {
-        world.isTileAccessible(point.x, point.y - 1);
-        point = world.getPoint(point.x, point.y - 1);
+        if (world.isTileAccessible(point.x, point.y - 1)) {
+            point = world.getPoint(point.x, point.y - 1);
+            setLayout();
+        }
     }
 
     @Override
     public void moveDown() {
-        world.isTileAccessible(point.x, point.y + 1);
-        point = world.getPoint(point.x, point.y + 1);
+        if (world.isTileAccessible(point.x, point.y + 1)) {
+            point = world.getPoint(point.x, point.y + 1);
+            setLayout();
+        }
     }
 
     @Override
     public void moveLeft() {
-        world.isTileAccessible(point.x - 1, point.y);
-        point = world.getPoint(point.x - 1, point.y);
+        if (world.isTileAccessible(point.x - 1, point.y)) {
+            point = world.getPoint(point.x - 1, point.y);
+            setLayout();
+        }
     }
 
     @Override
     public void moveRight() {
-        world.isTileAccessible(point.x + 1, point.y);
-        point = world.getPoint(point.x + 1, point.y);
+        if (world.isTileAccessible(point.x + 1, point.y)) {
+            point = world.getPoint(point.x + 1, point.y);
+            setLayout();
+        }
     }
 
     @Override
@@ -298,7 +314,32 @@ public class Agent extends Pane implements StepWorkingInteractive, PointsScanner
     }
 
     @Override
+    public int getUpScan() {
+        return world.getTileType(point.x, point.y - 1);
+    }
+
+    @Override
+    public int getDownScan() {
+        return world.getTileType(point.x, point.y + 1);
+    }
+
+    @Override
+    public int getleftScan() {
+        return world.getTileType(point.x - 1, point.y);
+    }
+
+    @Override
+    public int getRightScan() {
+        return world.getTileType(point.x + 1, point.y);
+    }
+
+    @Override
     public boolean isLoaded() {
         return load != null;
+    }
+
+    @Override
+    public String toString() {
+        return "Id = " + getId() + ", x = " + point.x + ", x = " + point.y;
     }
 }

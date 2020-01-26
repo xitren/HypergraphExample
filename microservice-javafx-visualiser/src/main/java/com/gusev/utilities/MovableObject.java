@@ -9,14 +9,12 @@ package com.gusev.utilities;
  * @author gusev_a
  */
 public interface MovableObject {
-
     Point getPoint();
-
+    boolean isPoint(int x, int y);
     void move(Point _point);
-
     void moveUp();
     void moveDown();
     void moveLeft();
     void moveRight();
-
+    void step();
 }

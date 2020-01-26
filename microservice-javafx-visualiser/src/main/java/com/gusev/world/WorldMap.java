@@ -9,15 +9,8 @@ import com.gusev.robots.Agent;
 import com.gusev.robots.AgentsInterface;
 import com.gusev.utilities.MovableObject;
 import com.gusev.utilities.Point;
-import com.gusev.utilities.StepWorkingInteractive;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -30,12 +23,12 @@ import java.util.Set;
 /**
  * @author gusev_a
  */
-public class WorldMap implements StepWorkingInteractive {
+public class WorldMap {
 
     private final Set<WorldTile> tiles = new HashSet();
 
     public final int SIZE;
-    public final Set<StepWorkingInteractive> step_objects = new HashSet();
+    public final Set<MovableObject> step_objects = new HashSet();
     public final Pane enviroment;
 
     public WorldMap(Pane map, File file) throws IOException {
@@ -133,12 +126,11 @@ public class WorldMap implements StepWorkingInteractive {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
             WorldTile tile =
                     tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
-            return tile.getType() == 0;
+            return tile.getType() == 0 && step_objects.stream().noneMatch((e) -> (e.isPoint(x, y)));
         } else
             return false;
     }
 
-    @Override
     public void step() {
         tiles.stream().forEach((e)->e.step());
         step_objects.stream().forEach((e)->e.step());

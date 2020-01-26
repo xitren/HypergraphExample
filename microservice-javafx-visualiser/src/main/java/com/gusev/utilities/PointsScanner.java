@@ -14,4 +14,8 @@ public interface PointsScanner {
     void scanNearPoints();
 
     HashMap<Point, Integer> getScannedPoints();
+    int getUpScan();
+    int getDownScan();
+    int getleftScan();
+    int getRightScan();
 }
