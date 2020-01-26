@@ -5,13 +5,10 @@
  */
 package com.gusev.utilities;
 
-import java.util.HashMap;
-
 /**
+ *
  * @author gusev_a
  */
-public interface PointsScanner {
-    void scanNearPoints();
-
-    HashMap<Point, Integer> getScannedPoints();
+public interface StepWorkingInteractive {
+    void step();
 }

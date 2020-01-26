@@ -6,13 +6,17 @@
 package com.gusev.utilities;
 
 /**
- *
  * @author gusev_a
  */
 public interface MovableObject {
-    
-    public int getX();
-    public int getY();
-    public void move(int _x, int _y);
-    
+
+    Point getPoint();
+
+    void move(Point _point);
+
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
+
 }

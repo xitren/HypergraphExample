@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 /**
+ *
  * @author gusev_a
  */
 public class ValueComparator implements Comparator<Point> {

@@ -10,11 +10,6 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
 
     protected ConfigurableApplicationContext context;
 
-    protected static void launchApp(Class<? extends AbstractJavaFxApplicationSupport> appClass, String[] args) {
-        AbstractJavaFxApplicationSupport.savedArgs = args;
-        Application.launch(appClass, args);
-    }
-
     @Override
     public void init() throws Exception {
         context = SpringApplication.run(getClass(), savedArgs);
@@ -25,5 +20,10 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
     public void stop() throws Exception {
         super.stop();
         context.close();
+    }
+
+    protected static void launchApp(Class<? extends AbstractJavaFxApplicationSupport> appClass, String[] args) {
+        AbstractJavaFxApplicationSupport.savedArgs = args;
+        Application.launch(appClass, args);
     }
 }

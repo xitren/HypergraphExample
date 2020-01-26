@@ -6,7 +6,6 @@
 package com.gusev.utilities;
 
 /**
- *
  * @author gusev_a
  */
 public interface StepWorkingInteractive {

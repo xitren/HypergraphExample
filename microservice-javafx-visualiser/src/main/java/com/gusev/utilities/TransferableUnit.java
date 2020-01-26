@@ -6,13 +6,14 @@
 package com.gusev.utilities;
 
 /**
- *
  * @author gusev_a
  */
 public interface TransferableUnit {
-    
-    public void loadSomething(MovableObject _load);
-    public MovableObject unloadSomething();
-    public boolean isLoaded();
-    
+
+    void loadSomething(MovableObject _load);
+
+    MovableObject unloadSomething();
+
+    boolean isLoaded();
+
 }
