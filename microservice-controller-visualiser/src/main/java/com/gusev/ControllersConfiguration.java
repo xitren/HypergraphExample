@@ -1,10 +1,8 @@
 package com.gusev;
 
-import com.gusev.visual.TestViewController;
+import com.gusev.fx.ControlCenterController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,15 +12,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 @Configuration
 public class ControllersConfiguration {
 
     @Bean(name = "mainView")
     public ViewHolder getMainView() throws IOException {
-        return loadView("fxml/testview.fxml");
+        return loadView("fxml/controlcenter.fxml");
     }
 
     /**
@@ -30,8 +26,8 @@ public class ControllersConfiguration {
      * и заставили его сделать произвести все необходимые инъекции.
      */
     @Bean
-    public TestViewController getMainController() throws IOException {
-        return (TestViewController) getMainView().getController();
+    public ControlCenterController getMainController() throws IOException {
+        return (ControlCenterController) getMainView().getController();
     }
 
     /**
@@ -81,6 +77,7 @@ public class ControllersConfiguration {
     private ClassLoader getContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
+
     /**
      * Класс - оболочка: контроллер мы обязаны указать в качестве бина,
      * а view - представление, нам предстоит использовать в точке входа {@link Application}.
