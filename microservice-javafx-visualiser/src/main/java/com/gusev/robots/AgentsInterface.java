@@ -105,6 +105,19 @@ public class AgentsInterface {
         }
     }
 
+    @GetMapping("/agents/{id}/scan")
+    public String scanAgent(@PathVariable String id) {
+        Agent nn = set.stream().filter(e->e.getId().equals(id)).findFirst().get();
+        if (nn != null) {
+            return "<UP>" + nn.getUpScan() + "</UP>\n"
+                    + "<DOWN>" + nn.getDownScan() + "</DOWN>\n"
+                    + "<LEFT>" + nn.getleftScan() + "</LEFT>\n"
+                    + "<RIGHT>" + nn.getRightScan() + "</RIGHT>\n";
+        } else {
+            return "error";
+        }
+    }
+
     @GetMapping("/agents/{id}/scan/up")
     public String scanupAgent(@PathVariable String id) {
         Agent nn = set.stream().filter(e->e.getId().equals(id)).findFirst().get();

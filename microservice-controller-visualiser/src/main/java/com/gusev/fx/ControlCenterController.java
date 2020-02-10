@@ -19,6 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import com.gusev.move_table.entity.Action;
+import com.gusev.move_table.entity.Move;
+import com.gusev.move_table.service.MoveService;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +34,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -59,7 +63,17 @@ public class ControlCenterController implements Initializable {
     @FXML
     public TableColumn<Agent, Integer> col_y;
 
+    @Autowired
+    private MoveService moveStoreService;
     private ObservableList<Agent> agents = FXCollections.observableArrayList();
+
+    private Agent getAgentById(String id) {
+        for (Agent ag : agents) {
+            if (ag.getId().equals(id))
+                return ag;
+        }
+        return null;
+    }
 
     private static String sendGETAction(String action){
         try {
@@ -117,10 +131,6 @@ public class ControlCenterController implements Initializable {
                 List<Agent> ag = getAgents(response.toString());
                 _agents.clear();
                 _agents.addAll(ag);
-//                ag.stream().forEach((ll)->{
-//                    if (_agents.stream().noneMatch((e)->e.getId() == ll.getId()))
-//                        _agents.add(ll);
-//                });
             } else {
                 System.out.println("GET request not worked");
             }
@@ -213,12 +223,28 @@ public class ControlCenterController implements Initializable {
 
     @FXML
     public void OnUp(ActionEvent actionEvent) {
-        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/up", ROBOT_ID));
+        if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/up", ROBOT_ID))
+                .equals("error")) {
+            Agent im = getAgentById(ROBOT_ID);
+            AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            moveStoreService.save(
+                    new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_UP,
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+            );
+        }
     }
 
     @FXML
     public void OnLeft(ActionEvent actionEvent) {
-        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/left", ROBOT_ID));
+        if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/left", ROBOT_ID))
+                .equals("error")) {
+            Agent im = getAgentById(ROBOT_ID);
+            AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            moveStoreService.save(
+                    new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_LEFT,
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+            );
+        }
     }
 
     @FXML
@@ -229,12 +255,28 @@ public class ControlCenterController implements Initializable {
 
     @FXML
     public void OnRight(ActionEvent actionEvent) {
-        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/right", ROBOT_ID));
+        if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/right", ROBOT_ID))
+                .equals("error")) {
+            Agent im = getAgentById(ROBOT_ID);
+            AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            moveStoreService.save(
+                    new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_RIGHT,
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+            );
+        }
     }
 
     @FXML
     public void OnDown(ActionEvent actionEvent) {
-        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/down", ROBOT_ID));
+        if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/down", ROBOT_ID))
+                .equals("error")) {
+            Agent im = getAgentById(ROBOT_ID);
+            AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            moveStoreService.save(
+                    new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_DOWN,
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+            );
+        }
     }
 
     @FXML
