@@ -12,6 +12,9 @@ public class Move implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private Long time;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -40,6 +43,7 @@ public class Move implements Serializable {
 
     public Move(String name, Integer x, Integer y, Action action,
                 Integer upType, Integer downType, Integer leftType, Integer rightType) {
+        this.time = System.currentTimeMillis();
         this.name = name;
         this.x = x;
         this.y = y;

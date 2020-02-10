@@ -28,12 +28,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -62,6 +64,41 @@ public class ControlCenterController implements Initializable {
     public TableColumn<Agent, Integer> col_x;
     @FXML
     public TableColumn<Agent, Integer> col_y;
+
+    public Pane scanUp = new Pane();
+    public Pane scanDown = new Pane();
+    public Pane scanLeft = new Pane();
+    public Pane scanRight = new Pane();
+    private static final Background[] WORLD_BACK = {
+            new Background(
+                    new BackgroundFill(
+                            Color.LIGHTBLUE,
+                            CornerRadii.EMPTY,
+                            Insets.EMPTY
+                    )
+            ),
+            new Background(
+                    new BackgroundFill(
+                            Color.LIGHTBLUE,
+                            CornerRadii.EMPTY,
+                            Insets.EMPTY
+                    )
+            ),
+            new Background(
+                    new BackgroundFill(
+                            Color.BLACK,
+                            CornerRadii.EMPTY,
+                            Insets.EMPTY
+                    )
+            ),
+            new Background(
+                    new BackgroundFill(
+                            Color.BLACK,
+                            CornerRadii.EMPTY,
+                            Insets.EMPTY
+                    )
+            ),
+    };
 
     @Autowired
     private MoveService moveStoreService;
@@ -201,6 +238,34 @@ public class ControlCenterController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        scanUp.setPrefWidth(30);
+        scanUp.setPrefHeight(30);
+        scanUp.setMinWidth(30);
+        scanUp.setMinHeight(30);
+        scanUp.setMaxWidth(30);
+        scanUp.setMaxHeight(30);
+        scanDown.setPrefWidth(30);
+        scanDown.setPrefHeight(30);
+        scanDown.setMinWidth(30);
+        scanDown.setMinHeight(30);
+        scanDown.setMaxWidth(30);
+        scanDown.setMaxHeight(30);
+        scanLeft.setPrefWidth(30);
+        scanLeft.setPrefHeight(30);
+        scanLeft.setMinWidth(30);
+        scanLeft.setMinHeight(30);
+        scanLeft.setMaxWidth(30);
+        scanLeft.setMaxHeight(30);
+        scanRight.setPrefWidth(30);
+        scanRight.setPrefHeight(30);
+        scanRight.setMinWidth(30);
+        scanRight.setMinHeight(30);
+        scanRight.setMaxWidth(30);
+        scanRight.setMaxHeight(30);
+        scanner_grid.add(scanUp,1,0);
+        scanner_grid.add(scanDown,1,2);
+        scanner_grid.add(scanLeft,0,1);
+        scanner_grid.add(scanRight,2,1);
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_x.setCellValueFactory(new PropertyValueFactory<>("x"));
         col_y.setCellValueFactory(new PropertyValueFactory<>("y"));
@@ -214,7 +279,14 @@ public class ControlCenterController implements Initializable {
             else
                 ROBOT_ID = "none";
         });
-    }    
+    }
+
+    private void setScanned(AgentScanner sc) {
+        scanUp.setBackground(WORLD_BACK[sc.getUpType()]);
+        scanDown.setBackground(WORLD_BACK[sc.getDownType()]);
+        scanLeft.setBackground(WORLD_BACK[sc.getLeftType()]);
+        scanRight.setBackground(WORLD_BACK[sc.getRightType()]);
+    }
     
     @Override
     protected void finalize(){
@@ -227,6 +299,7 @@ public class ControlCenterController implements Initializable {
                 .equals("error")) {
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_UP,
                             sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
@@ -240,6 +313,7 @@ public class ControlCenterController implements Initializable {
                 .equals("error")) {
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_LEFT,
                             sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
@@ -259,6 +333,7 @@ public class ControlCenterController implements Initializable {
                 .equals("error")) {
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_RIGHT,
                             sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
@@ -272,6 +347,7 @@ public class ControlCenterController implements Initializable {
                 .equals("error")) {
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
+            setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_DOWN,
                             sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
