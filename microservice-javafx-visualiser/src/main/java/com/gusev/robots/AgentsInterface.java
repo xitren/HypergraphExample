@@ -25,20 +25,24 @@ public class AgentsInterface {
         try {
             int xp = Integer.parseInt(x);
             int yp = Integer.parseInt(y);
-            Point pnt = world.getPoint(xp, yp);
-            if (pnt != null) {
-                Agent nn = new Agent(world, pnt);
-                if (world.addAgent(nn, xp, yp)) {
-                    set.add(nn);
-                    return "Agent created, <ID>" + nn.getId() + "</ID>, x: " + x + ", y: " + y;
+            if (world.isTileAccessible(xp, yp)) {
+                Point pnt = world.getPoint(xp, yp);
+                if (pnt != null) {
+                    Agent nn = new Agent(world, pnt);
+                    if (world.addAgent(nn, xp, yp)) {
+                        set.add(nn);
+                        return "" + nn.getId();
+                    } else {
+                        return "error";
+                    }
                 } else {
-                    return "Exception: Area is full, x: " + x + ", y: " + y;
+                    return "error";
                 }
             } else {
-                return "Exception: Point is null, x: " + x + ", y: " + y;
+                return "error";
             }
         } catch (NumberFormatException ex) {
-            return "Exception: " + ex + ", ID: , x: " + x + ", y: " + y;
+            return "error";
         }
     }
 
@@ -50,10 +54,10 @@ public class AgentsInterface {
                 set.remove(nn);
                 return "Agent deleted, ID: " + nn.getId();
             } else {
-                return "Agent not found, internal error, ID: " + id;
+                return "error";
             }
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -64,7 +68,7 @@ public class AgentsInterface {
             nn.moveUp();
             return "Agent , ID: " + id + ", x: " + nn.getPoint().x + ", y: " + nn.getPoint().y;
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -75,7 +79,7 @@ public class AgentsInterface {
             nn.moveDown();
             return "Agent , ID: " + id + ", x: " + nn.getPoint().x + ", y: " + nn.getPoint().y;
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -86,7 +90,7 @@ public class AgentsInterface {
             nn.moveLeft();
             return "Agent , ID: " + id + ", x: " + nn.getPoint().x + ", y: " + nn.getPoint().y;
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -97,7 +101,7 @@ public class AgentsInterface {
             nn.moveRight();
             return "Agent , ID: " + id + ", x: " + nn.getPoint().x + ", y: " + nn.getPoint().y;
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -107,7 +111,7 @@ public class AgentsInterface {
         if (nn != null) {
             return "" + nn.getUpScan();
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -117,7 +121,7 @@ public class AgentsInterface {
         if (nn != null) {
             return "" + nn.getDownScan();
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -127,7 +131,7 @@ public class AgentsInterface {
         if (nn != null) {
             return "" + nn.getleftScan();
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
@@ -137,7 +141,7 @@ public class AgentsInterface {
         if (nn != null) {
             return "" + nn.getRightScan();
         } else {
-            return "Agent not found, ID: " + id;
+            return "error";
         }
     }
 
