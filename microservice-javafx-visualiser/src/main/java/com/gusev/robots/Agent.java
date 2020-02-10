@@ -340,6 +340,10 @@ public class Agent extends Pane implements PointsScanner,
 
     @Override
     public String toString() {
-        return "Id = " + getId() + ", x = " + point.x + ", x = " + point.y;
+        return "<ROBOT><ID>" + getId() + "</ID><X>" + point.x + "</X><Y>" + point.y + "</Y></ROBOT>";
+    }
+
+    public String toString(int ind) {
+        return "<ROBOT" + ind + "><ID>" + getId() + "</ID><X>" + point.x + "</X><Y>" + point.y + "</Y></ROBOT" + ind + ">";
     }
 }

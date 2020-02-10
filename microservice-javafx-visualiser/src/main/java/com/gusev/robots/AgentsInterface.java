@@ -148,8 +148,9 @@ public class AgentsInterface {
     @GetMapping("/agents/list")
     public String listAgent() {
         String ret = "";
+        int i = 0;
         for (Agent ag : set) {
-            ret = ret.concat(ag.toString() + "; ");
+            ret = ret.concat(ag.toString(i++) + "\n");
         }
         return ret;
     }

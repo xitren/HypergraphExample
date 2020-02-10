@@ -126,7 +126,8 @@ public class WorldMap {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
             WorldTile tile =
                     tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
-            return tile.getType() == 0 && step_objects.stream().noneMatch((e) -> (e.isPoint(x, y)));
+            boolean none = step_objects.stream().noneMatch((e) -> (e.isPoint(x, y)));
+            return tile.getTypeStat() == 0 && none;
         } else
             return false;
     }

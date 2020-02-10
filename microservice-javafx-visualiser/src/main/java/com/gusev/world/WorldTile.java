@@ -84,6 +84,10 @@ public class WorldTile extends Pane {
         }
     }
 
+    public int getTypeStat(){
+        return type;
+    }
+
     public void located(int _type){
         type = _type;
         known = (int) FULL_KNOWN_IN_STEPS;
