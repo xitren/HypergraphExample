@@ -6,8 +6,10 @@
 package com.gusev.visual;
 
 import com.gusev.world.WorldMap;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
@@ -25,6 +27,8 @@ import java.util.logging.Logger;
 public class TestViewController implements Initializable {
 
     public WorldMap data;
+    @FXML
+    public Label Mark;
     @FXML
     private Pane map;
     @FXML
@@ -46,6 +50,10 @@ public class TestViewController implements Initializable {
                     @Override
                     public void run() {
                         data.step();
+                        int mm = data.getMark();
+                        Platform.runLater(()->{
+                            Mark.setText("Current mark " + mm);
+                        });
                     }
                 }, 2000, 100);
     }

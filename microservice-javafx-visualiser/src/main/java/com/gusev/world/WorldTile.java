@@ -43,6 +43,10 @@ public class WorldTile extends Pane {
 
     private int known;
 
+    public int getKnown() {
+        return known;
+    }
+
     public WorldTile(int _type, Point _point){
         super();
         type = _type;
@@ -99,6 +103,8 @@ public class WorldTile extends Pane {
 
     public void step(){
         known--;
+        if (known < 0)
+            known = 0;
         setOpacity(((double)known) / FULL_KNOWN_IN_STEPS);
     }
 }

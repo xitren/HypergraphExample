@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 /**
  * @author gusev_a
@@ -130,6 +131,10 @@ public class WorldMap {
             return tile.getTypeStat() == 0 && none;
         } else
             return false;
+    }
+
+    public int getMark() {
+        return tiles.stream().mapToInt((e)-> e.getKnown()).sum();
     }
 
     public void step() {

@@ -11,10 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -64,6 +61,8 @@ public class ControlCenterController implements Initializable {
     public TableColumn<Agent, Integer> col_x;
     @FXML
     public TableColumn<Agent, Integer> col_y;
+
+    private final static Timer UPDATER = new Timer();
 
     public Pane scanUp = new Pane();
     public Pane scanDown = new Pane();
@@ -166,8 +165,10 @@ public class ControlCenterController implements Initializable {
                 in.close();
                 System.out.println(response.toString());
                 List<Agent> ag = getAgents(response.toString());
-                _agents.clear();
-                _agents.addAll(ag);
+                synchronized (_agents) {
+                    _agents.clear();
+                    _agents.addAll(ag);
+                }
             } else {
                 System.out.println("GET request not worked");
             }
@@ -238,6 +239,13 @@ public class ControlCenterController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        UPDATER.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        redraw();
+                    }
+                }, 0, 500);
         scanUp.setPrefWidth(30);
         scanUp.setPrefHeight(30);
         scanUp.setMinWidth(30);
@@ -279,6 +287,31 @@ public class ControlCenterController implements Initializable {
             else
                 ROBOT_ID = "none";
         });
+    }
+
+    private void redraw() {
+        getAgents(agents);
+        synchronized (agents) {
+            agents.stream().forEach((e) -> {
+                int l = (int) ((Math.random() * 1000) % 5);
+                switch (l) {
+                    case 1:
+                        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/up", e.getId()));
+                        break;
+                    case 2:
+                        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/down", e.getId()));
+                        break;
+                    case 3:
+                        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/left", e.getId()));
+                        break;
+                    case 4:
+                        sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/right", e.getId()));
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
     }
 
     private void setScanned(AgentScanner sc) {
