@@ -16,6 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import com.gusev.controllers.AgentController;
+import com.gusev.controllers.FloodController;
+import com.gusev.controllers.RandomController;
 import com.gusev.move_table.entity.Action;
 import com.gusev.move_table.entity.Move;
 import com.gusev.move_table.service.MoveService;
@@ -102,6 +105,7 @@ public class ControlCenterController implements Initializable {
     @Autowired
     private MoveService moveStoreService;
     private ObservableList<Agent> agents = FXCollections.observableArrayList();
+    private AgentController robot_ctrl = new RandomController();
 
     private Agent getAgentById(String id) {
         for (Agent ag : agents) {
@@ -245,7 +249,7 @@ public class ControlCenterController implements Initializable {
                     public void run() {
                         redraw();
                     }
-                }, 0, 500);
+                }, 5000, 500);
         scanUp.setPrefWidth(30);
         scanUp.setPrefHeight(30);
         scanUp.setMinWidth(30);
@@ -277,7 +281,16 @@ public class ControlCenterController implements Initializable {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_x.setCellValueFactory(new PropertyValueFactory<>("x"));
         col_y.setCellValueFactory(new PropertyValueFactory<>("y"));
+        sendGETAction(String.format("http://localhost:" + PORT + "/agents/clear"));
         ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=2"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=3"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=4"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=5"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=6"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=7"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=8"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=9"));
+        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=10"));
         getAgents(agents);
         robots.setItems(agents);
         robots.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
@@ -293,7 +306,11 @@ public class ControlCenterController implements Initializable {
         getAgents(agents);
         synchronized (agents) {
             agents.stream().forEach((e) -> {
-                int l = (int) ((Math.random() * 1000) % 5);
+                AgentScanner sc =  AgentScanner.getCurrentScan(e.getId(), PORT);
+                if (sc == null)
+                    return;
+                int l = robot_ctrl.getMove(sc);
+                Long prev = getWorldMark();
                 switch (l) {
                     case 1:
                         sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/up", e.getId()));
@@ -310,6 +327,12 @@ public class ControlCenterController implements Initializable {
                     default:
                         break;
                 }
+                Long after = getWorldMark();
+                moveStoreService.save(
+                        new Move(e.getId(), e.getX(), e.getY(), Action.MOVE_UP,
+                                sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType(),
+                                prev, after)
+                );
             });
         }
     }
@@ -326,30 +349,41 @@ public class ControlCenterController implements Initializable {
         sendGETAction(String.format("http://localhost:" + PORT + "/agents/delete?id=%s", ROBOT_ID));
     }
 
+    private Long getWorldMark(){
+        String rr =  sendGETAction(String.format("http://localhost:" + PORT + "/world/mark"));
+        return Long.parseLong(rr);
+    }
+
     @FXML
     public void OnUp(ActionEvent actionEvent) {
+        Long prev = getWorldMark();
         if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/up", ROBOT_ID))
                 .equals("error")) {
+            Long after = getWorldMark();
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
             setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_UP,
-                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType(),
+                            prev, after)
             );
         }
     }
 
     @FXML
     public void OnLeft(ActionEvent actionEvent) {
+        Long prev = getWorldMark();
         if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/left", ROBOT_ID))
                 .equals("error")) {
+            Long after = getWorldMark();
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
             setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_LEFT,
-                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType(),
+                            prev, after)
             );
         }
     }
@@ -362,28 +396,34 @@ public class ControlCenterController implements Initializable {
 
     @FXML
     public void OnRight(ActionEvent actionEvent) {
+        Long prev = getWorldMark();
         if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/right", ROBOT_ID))
                 .equals("error")) {
+            Long after = getWorldMark();
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
             setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_RIGHT,
-                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType(),
+                            prev, after)
             );
         }
     }
 
     @FXML
     public void OnDown(ActionEvent actionEvent) {
+        Long prev = getWorldMark();
         if (!sendGETAction(String.format("http://localhost:" + PORT + "/agents/%s/move/down", ROBOT_ID))
                 .equals("error")) {
+            Long after = getWorldMark();
             Agent im = getAgentById(ROBOT_ID);
             AgentScanner sc =  AgentScanner.getCurrentScan(ROBOT_ID, PORT);
             setScanned(sc);
             moveStoreService.save(
                     new Move(im.getId(), im.getX(), im.getY(), Action.MOVE_DOWN,
-                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType())
+                            sc.getUpType(), sc.getDownType(), sc.getLeftType(), sc.getRightType(),
+                            prev, after)
             );
         }
     }

@@ -61,6 +61,12 @@ public class AgentsInterface {
         }
     }
 
+    @GetMapping("/agents/clear")
+    public String clearAgents() {
+        world.clearAgents();
+        return "ok";
+    }
+
     @GetMapping("/agents/{id}/move/up")
     public String moveupAgent(@PathVariable String id) {
         Agent nn = set.stream().filter(e->e.getId().equals(id)).findFirst().get();
@@ -107,13 +113,17 @@ public class AgentsInterface {
 
     @GetMapping("/agents/{id}/scan")
     public String scanAgent(@PathVariable String id) {
-        Agent nn = set.stream().filter(e->e.getId().equals(id)).findFirst().get();
-        if (nn != null) {
-            return "<UP>" + nn.getUpScan() + "</UP>\n"
-                    + "<DOWN>" + nn.getDownScan() + "</DOWN>\n"
-                    + "<LEFT>" + nn.getleftScan() + "</LEFT>\n"
-                    + "<RIGHT>" + nn.getRightScan() + "</RIGHT>\n";
-        } else {
+        try {
+            Agent nn = set.stream().filter(e -> e.getId().equals(id)).findFirst().get();
+            if (nn != null) {
+                return "<UP>" + nn.getUpScan() + "</UP>\n"
+                        + "<DOWN>" + nn.getDownScan() + "</DOWN>\n"
+                        + "<LEFT>" + nn.getleftScan() + "</LEFT>\n"
+                        + "<RIGHT>" + nn.getRightScan() + "</RIGHT>\n";
+            } else {
+                return "error";
+            }
+        } catch (java.util.NoSuchElementException ex) {
             return "error";
         }
     }
@@ -166,5 +176,10 @@ public class AgentsInterface {
             ret = ret.concat(ag.toString(i++) + "\n");
         }
         return ret;
+    }
+
+    @GetMapping("/world/mark")
+    public String markCalc() {
+        return "" + world.getMark();
     }
 }

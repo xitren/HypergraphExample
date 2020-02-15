@@ -38,11 +38,18 @@ public class Move implements Serializable {
     @Column(nullable = false)
     private Integer rightType;
 
+    @Column(nullable = false)
+    private Long beforeMark;
+
+    @Column(nullable = false)
+    private Long afterMark;
+
     public Move() {
     }
 
     public Move(String name, Integer x, Integer y, Action action,
-                Integer upType, Integer downType, Integer leftType, Integer rightType) {
+                Integer upType, Integer downType, Integer leftType, Integer rightType,
+                Long beforeMark, Long afterMark) {
         this.time = System.currentTimeMillis();
         this.name = name;
         this.x = x;
@@ -52,6 +59,8 @@ public class Move implements Serializable {
         this.downType = downType;
         this.leftType = leftType;
         this.rightType = rightType;
+        this.beforeMark = beforeMark;
+        this.afterMark = afterMark;
     }
 
     public Long getId() {
@@ -124,5 +133,25 @@ public class Move implements Serializable {
 
     public void setRightType(Integer rightType) {
         this.rightType = rightType;
+    }
+
+    public Long getAfterMark() {
+        return afterMark;
+    }
+
+    public void setAfterMark(Long afterMark) {
+        this.afterMark = afterMark;
+    }
+
+    public Long getBeforeMark() {
+        return beforeMark;
+    }
+
+    public void setBeforeMark(Long beforeMark) {
+        this.beforeMark = beforeMark;
+    }
+
+    public Long getTime() {
+        return time;
     }
 }

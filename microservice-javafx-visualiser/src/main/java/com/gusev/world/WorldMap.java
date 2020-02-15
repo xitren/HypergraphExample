@@ -88,7 +88,9 @@ public class WorldMap {
 
     public boolean addAgent(Agent ag, int x, int y) {
         if (!isTileBlocked(x, y) && ag != null) {
-            step_objects.add(ag);
+            synchronized (step_objects) {
+                step_objects.add(ag);
+            }
             Platform.runLater(()->{enviroment.getChildren().add(ag);});
             return true;
         } else
@@ -97,7 +99,9 @@ public class WorldMap {
 
     public boolean removeAgent(Agent ag) {
         if (ag != null) {
-            step_objects.remove(ag);
+            synchronized (step_objects) {
+                step_objects.remove(ag);
+            }
             Platform.runLater(()->{enviroment.getChildren().remove(ag);});
             return true;
         } else
@@ -127,7 +131,10 @@ public class WorldMap {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
             WorldTile tile =
                     tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
-            boolean none = step_objects.stream().noneMatch((e) -> (e.isPoint(x, y)));
+            boolean none;
+            synchronized (step_objects) {
+                none = step_objects.stream().noneMatch((e) -> (e.isPoint(x, y)));
+            }
             return tile.getTypeStat() == 0 && none;
         } else
             return false;
@@ -139,6 +146,14 @@ public class WorldMap {
 
     public void step() {
         tiles.stream().forEach((e)->e.step());
-        step_objects.stream().forEach((e)->e.step());
+        synchronized (step_objects) {
+            step_objects.stream().forEach((e) -> e.step());
+        }
+    }
+
+    public void clearAgents() {
+        synchronized (step_objects) {
+            step_objects.clear();
+        }
     }
 }

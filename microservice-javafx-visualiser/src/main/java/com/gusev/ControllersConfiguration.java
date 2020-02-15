@@ -1,6 +1,6 @@
 package com.gusev;
 
-import com.gusev.visual.TestViewController;
+import com.gusev.fx.TestViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.springframework.context.annotation.Bean;
