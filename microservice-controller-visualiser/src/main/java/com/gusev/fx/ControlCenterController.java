@@ -105,7 +105,7 @@ public class ControlCenterController implements Initializable {
     @Autowired
     private MoveService moveStoreService;
     private ObservableList<Agent> agents = FXCollections.observableArrayList();
-    private AgentController robot_ctrl = new RandomController();
+    private AgentController robot_ctrl = new FloodController();
 
     private Agent getAgentById(String id) {
         for (Agent ag : agents) {
@@ -309,7 +309,7 @@ public class ControlCenterController implements Initializable {
                 AgentScanner sc =  AgentScanner.getCurrentScan(e.getId(), PORT);
                 if (sc == null)
                     return;
-                int l = robot_ctrl.getMove(sc);
+                int l = robot_ctrl.getMove(e, sc);
                 Long prev = getWorldMark();
                 switch (l) {
                     case 1:

@@ -3,8 +3,12 @@ package com.gusev.controllers;
 import com.gusev.fx.Agent;
 import com.gusev.fx.AgentScanner;
 
-public class RandomController implements AgentController {
+import java.util.HashSet;
+import java.util.Set;
+
+public class ExpandController implements AgentController {
     private final static int MAX_CYCLES = 20;
+    private final Set<Agent> set = new HashSet();
 
     @Override
     public int getMove(Agent ag, AgentScanner sc) {
