@@ -22,38 +22,16 @@ import java.util.Set;
 public class WorldMap {
 
     private final Set<WorldTile> tiles = new HashSet();
-
     public final int SIZE;
-    public final Pane enviroment;
 
-    public WorldMap(Pane map, File file) throws IOException {
-        enviroment = map;
-        BufferedReader READER = null;
-        try {
-            READER = new BufferedReader(new FileReader(file));
-            String line;
-            if ((line = READER.readLine()) != null) {
-                SIZE = line.length();
-            } else
-                throw new IOException("File format error!");
-            int k = 0;
-            do {
-                for (int i = 0; i < line.length(); i++) {
-                    int type;
-                    if (line.charAt(i) == '-')
-                        type = WorldTile.FREE_TILE;
-                    else
-                        type = WorldTile.WALL_TILE;
-                    tiles.add(new WorldTile(type, new Point(i, k)));
-                }
-                k++;
-            } while ((line = READER.readLine()) != null);
-        } finally {
-            if (READER != null)
-                READER.close();
+    public WorldMap(int size) {
+        SIZE = size;
+        tiles.clear();
+        for (int i = 0;i < SIZE;i++) {
+            for (int j = 0;j < SIZE;j++) {
+                tiles.add(new WorldTile(WorldTile.UNDEFINED_TILE, new Point(i, j)));
+            }
         }
-        map.getChildren().clear();
-        tiles.stream().forEach((e)->map.getChildren().add(e));
     }
 
     public LinkedList<Point> getPath(int x1, int y1, int x2, int y2) {

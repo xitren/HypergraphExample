@@ -19,21 +19,6 @@ public class WorldTile extends Pane {
     public static final int UNDEFINED_TILE = -1;
     public static final int BROKEN_TILE = -2;
 
-    private static final Background FREE_TILE_BACK = new Background(
-            new BackgroundFill(
-                    Color.LIGHTBLUE,
-                    CornerRadii.EMPTY,
-                    Insets.EMPTY
-            )
-    );
-    private static final Background WALL_TILE_BACK = new Background(
-            new BackgroundFill(
-                    Color.BLACK,
-                    CornerRadii.EMPTY,
-                    Insets.EMPTY
-            )
-    );
-
     @Setter
     private int type;
 
@@ -50,11 +35,6 @@ public class WorldTile extends Pane {
         super();
         type = _type;
         known = FULL_KNOWN_IN_STEPS;
-        setBackground(FREE_TILE_BACK);
-        if (type == FREE_TILE)
-            setBackground(FREE_TILE_BACK);
-        if (type == WALL_TILE)
-            setBackground(WALL_TILE_BACK);
         setPrefWidth(15);
         setPrefHeight(15);
         point = _point;
