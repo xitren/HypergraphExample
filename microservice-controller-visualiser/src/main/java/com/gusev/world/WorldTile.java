@@ -9,11 +9,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import lombok.Setter;
 
-public class WorldTile extends Pane {
+public class WorldTile {
     private static final int TILE_SIZE = 20;
     private static final int TILE_OVER = 2;
-    private static final int FULL_KNOWN_IN_STEPS = 100;
 
+    public static final int FULL_KNOWN_IN_STEPS = 100;
     public static final int FREE_TILE = 0;
     public static final int WALL_TILE = 2;
     public static final int UNDEFINED_TILE = -1;
@@ -35,12 +35,7 @@ public class WorldTile extends Pane {
         super();
         type = _type;
         known = FULL_KNOWN_IN_STEPS;
-        setPrefWidth(15);
-        setPrefHeight(15);
         point = _point;
-        setOpacity(((double)known) / FULL_KNOWN_IN_STEPS);
-        setLayoutX(TILE_SIZE * point.x + TILE_OVER);
-        setLayoutY(TILE_SIZE * point.y + TILE_OVER);
     }
 
     public boolean isKnown(){
@@ -84,6 +79,5 @@ public class WorldTile extends Pane {
         known--;
         if (known < 0)
             known = 0;
-        setOpacity(((double)known) / FULL_KNOWN_IN_STEPS);
     }
 }

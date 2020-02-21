@@ -5,7 +5,11 @@
  */
 package com.gusev.world;
 
+import com.gusev.controllers.AgentController;
+import com.gusev.fx.Agent;
+import com.gusev.fx.AgentScanner;
 import com.gusev.utilities.Point;
+import com.gusev.utilities.Vector;
 import javafx.scene.layout.Pane;
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,6 +61,49 @@ public class WorldMap {
             return null;
     }
 
+    public void locate(Agent ag, AgentScanner as) {
+        if (as != null && ag != null) {
+            int x = ag.getX();
+            int y = ag.getX();
+            setTileLocated(x - 1, y, as.getLeftType());
+            setTileLocated(x + 1, y, as.getRightType());
+            setTileLocated(x, y - 1, as.getUpType());
+            setTileLocated(x, y + 1, as.getDownType());
+        }
+    }
+
+    public Vector getVector(int x, int y) {
+        if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
+            Vector vect = new Vector(0,0);
+            WorldTile tile =
+                    tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
+            double cur_x = tile.getPoint().x;
+            double cur_y = tile.getPoint().y;
+            tiles.stream().filter((e)->e != tile).forEach((e)->{
+                double nn_x = e.getPoint().x;
+                double nn_y = e.getPoint().y;
+                double x_n = nn_x - cur_x;
+                double y_n = nn_y - cur_y;
+                double k = (WorldTile.FULL_KNOWN_IN_STEPS - e.getKnown())
+                        / Math.sqrt(Math.pow(cur_x - nn_x, 2) + Math.pow(cur_y - nn_y, 2));
+                if (e.getType() > 0)
+                    vect.sum(x_n * k, y_n * k);
+                else
+                    vect.sum(-x_n * k, -y_n * k);
+            });
+            return vect;
+        } else
+            return null;
+    }
+
+    public void setTileLocated(int x, int y, int type) {
+        if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
+            WorldTile tile =
+                    tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
+            tile.located(type);
+        }
+    }
+
     public int getTileType(int x, int y) {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
             WorldTile tile =
@@ -65,6 +112,16 @@ public class WorldMap {
             return tile.getType();
         } else
             return 0;
+    }
+
+    public WorldTile getTile(int x, int y) {
+        if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
+            WorldTile tile =
+                    tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
+            tile.scanned();
+            return tile;
+        } else
+            return null;
     }
 
     public boolean isTileBlocked(int x, int y) {

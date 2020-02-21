@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import com.gusev.controllers.AgentController;
+import com.gusev.controllers.FireflyController;
 import com.gusev.controllers.FloodController;
 import com.gusev.controllers.RandomController;
 import com.gusev.move_table.entity.Action;
@@ -105,7 +106,7 @@ public class ControlCenterController implements Initializable {
     @Autowired
     private MoveService moveStoreService;
     private ObservableList<Agent> agents = FXCollections.observableArrayList();
-    private AgentController robot_ctrl = new FloodController();
+    private AgentController robot_ctrl = new FireflyController();
 
     private Agent getAgentById(String id) {
         for (Agent ag : agents) {
