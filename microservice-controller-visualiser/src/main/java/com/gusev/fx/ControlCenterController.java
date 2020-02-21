@@ -284,14 +284,14 @@ public class ControlCenterController implements Initializable {
         col_y.setCellValueFactory(new PropertyValueFactory<>("y"));
         sendGETAction(String.format("http://localhost:" + PORT + "/agents/clear"));
         ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=2"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=3"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=4"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=5"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=6"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=7"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=8"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=9"));
-        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=10"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=3"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=4"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=5"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=6"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=7"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=8"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=9"));
+//        ROBOT_ID = sendGETAction(String.format("http://localhost:" + PORT + "/agents/add?x=2&y=10"));
         getAgents(agents);
         robots.setItems(agents);
         robots.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {

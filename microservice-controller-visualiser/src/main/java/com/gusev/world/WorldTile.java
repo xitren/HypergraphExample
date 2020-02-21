@@ -28,6 +28,8 @@ public class WorldTile {
     private int known;
 
     public int getKnown() {
+        if (type == UNDEFINED_TILE)
+            return 0;
         return known;
     }
 

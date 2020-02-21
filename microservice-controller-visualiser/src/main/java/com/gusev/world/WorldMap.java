@@ -84,12 +84,12 @@ public class WorldMap {
                 double nn_y = e.getPoint().y;
                 double x_n = nn_x - cur_x;
                 double y_n = nn_y - cur_y;
-                double k = (WorldTile.FULL_KNOWN_IN_STEPS - e.getKnown())
-                        / Math.sqrt(Math.pow(cur_x - nn_x, 2) + Math.pow(cur_y - nn_y, 2));
-                if (e.getType() > 0)
+                double k = ((double)(WorldTile.FULL_KNOWN_IN_STEPS - e.getKnown()));
+                k = k / Math.sqrt(Math.pow(cur_x - nn_x, 2) + Math.pow(cur_y - nn_y, 2));
+                if (e.getType() <= 0)
                     vect.sum(x_n * k, y_n * k);
-                else
-                    vect.sum(-x_n * k, -y_n * k);
+//                else
+//                    vect.sum(-x_n * k, -y_n * k);
             });
             return vect;
         } else

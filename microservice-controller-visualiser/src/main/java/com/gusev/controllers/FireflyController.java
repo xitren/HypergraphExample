@@ -21,14 +21,24 @@ public class FireflyController implements AgentController {
         map.locate(ag, sc);
         Vector vect = map.getVector(ag.getX(), ag.getY());
         collegues.entrySet().stream().forEach((s) -> {
+            if (ag.getId().equals(s.getKey()))
+                return;
             double nn_x = s.getValue().x;
             double nn_y = s.getValue().y;
             double x_n = nn_x - ag.getX();
             double y_n = nn_y - ag.getY();
-            double k = (WorldTile.FULL_KNOWN_IN_STEPS)
+            double k = ((double)WorldTile.FULL_KNOWN_IN_STEPS)
                     / Math.sqrt(Math.pow(ag.getX() - nn_x, 2) + Math.pow(ag.getY() - nn_y, 2));
             vect.sum(-x_n * k, -y_n * k);
         });
+        if (vect.getX() > 0 && sc.getRightType() > 0)
+            vect.sum(-1.5 * vect.getX(), 0);
+        if (vect.getX() <= 0 && sc.getLeftType() > 0)
+            vect.sum(-1.5 * vect.getX(), 0);
+        if (vect.getY() > 0 && sc.getDownType() > 0)
+            vect.sum(0, -1.5 * vect.getY());
+        if (vect.getY() > 0 && sc.getUpType() > 0)
+            vect.sum(0, -1.5 * vect.getY());
         if (Math.abs(vect.getX()) > Math.abs(vect.getY())) {
             if (vect.getX() < 0)
                 return 3;
