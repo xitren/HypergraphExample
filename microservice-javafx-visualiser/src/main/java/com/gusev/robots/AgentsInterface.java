@@ -64,6 +64,7 @@ public class AgentsInterface {
     @GetMapping("/agents/clear")
     public String clearAgents() {
         world.clearAgents();
+        set.clear();
         return "ok";
     }
 

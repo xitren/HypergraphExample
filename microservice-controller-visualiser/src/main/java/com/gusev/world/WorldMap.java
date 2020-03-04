@@ -84,12 +84,17 @@ public class WorldMap {
                 double nn_y = e.getPoint().y;
                 double x_n = nn_x - cur_x;
                 double y_n = nn_y - cur_y;
-                double k = ((double)(WorldTile.FULL_KNOWN_IN_STEPS - e.getKnown()));
-                k = k / Math.sqrt(Math.pow(cur_x - nn_x, 2) + Math.pow(cur_y - nn_y, 2));
-                if (e.getType() <= 0)
-                    vect.sum(x_n * k, y_n * k);
-//                else
-//                    vect.sum(-x_n * k, -y_n * k);
+                double k = 0;
+                if (e.getKnown() > (WorldTile.FULL_KNOWN_IN_STEPS / 2)) {
+                    if (e.getType() == WorldTile.WALL_TILE)
+                        k = -1;
+                    else
+                        k = 0;
+                } else {
+                    k = 1;
+                }
+                k = k / Math.pow(Math.pow(cur_x - nn_x, 2) + Math.pow(cur_y - nn_y, 2), 2);
+                vect.sum(x_n * k, y_n * k);
             });
             return vect;
         } else
@@ -118,6 +123,16 @@ public class WorldMap {
         if (0 <= x && x < SIZE && 0 <= y && y < SIZE) {
             WorldTile tile =
                     tiles.stream().filter((e) -> (e.isPoint(x, y))).findFirst().get();
+            tile.scanned();
+            return tile;
+        } else
+            return null;
+    }
+
+    public WorldTile getTileByPoint(Point pt) {
+        if (0 <= pt.x && pt.x < SIZE && 0 <= pt.y && pt.y < SIZE) {
+            WorldTile tile =
+                    tiles.stream().filter((e) -> (e.isPoint(pt.x, pt.y))).findFirst().get();
             tile.scanned();
             return tile;
         } else
